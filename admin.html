@@ -15,6 +15,7 @@ h1{font-size:19px;margin:0 0 4px}
 .bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 button{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:8px;padding:9px 14px;font-size:13.5px;cursor:pointer}
 button.ghost{background:var(--card);color:var(--accent)}
+select{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:9px 10px;font-size:13.5px;font-family:inherit}
 button.small{padding:5px 10px;font-size:12px}
 .item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:12px}
 .item h2{font-size:14.5px;margin:0 0 8px;line-height:1.5}
@@ -29,8 +30,12 @@ button.small{padding:5px 10px;font-size:12px}
 <body>
 <main>
 <h1>Discord投稿テキスト生成（管理用）</h1>
-<p class="sub">期間限定の開催中・開催予定からランダムで10件を選び、投稿テンプレートに整形します。各項目のラベルと概要はその場で書き換えられます。「この1件だけ差し替え」もできます。</p>
+<p class="sub">期間限定の開催中・開催予定からランダムで10件を選び、投稿テンプレートに整形します。既定は東京都内のみ（全国にも切り替え可）。各項目のラベルと概要はその場で書き換えられます。「この1件だけ差し替え」もできます。</p>
 <div class="bar">
+<select id="scope">
+<option value="tokyo" selected>東京都内のみ</option>
+<option value="all">全国</option>
+</select>
 <button id="draw" type="button">🎲 ランダム10件を引き直す</button>
 <button id="copyAll" class="ghost" type="button">📋 全部コピー</button>
 <span class="done" id="done"></span>
@@ -40,7 +45,7 @@ button.small{padding:5px 10px;font-size:12px}
 <textarea id="out" readonly></textarea>
 </main>
 <script>
-let DATA = [], picks = [];
+let DATA = [], picks = [], scope = "tokyo";
 
 function todayJST(){
 const now = new Date();
@@ -86,9 +91,11 @@ for (const s of sentences){
 }
 return out || t;
 }
+function isTokyo(e){ return e.prefecture === "東京都" || (e.runs||[]).some(r => r.prefecture === "東京都");}
 function pool(){
 return DATA.filter(e => e.venueType!== "permanent" && e.category!== "online"
-&& (!e.endDate || e.endDate >= TODAY));
+&& (!e.endDate || e.endDate >= TODAY)
+&& (scope!== "tokyo" || isTokyo(e)));
 }
 function draw(n, exclude){
 const p = pool().filter(e =>!(exclude||[]).includes(e.id));
@@ -100,7 +107,7 @@ function render(){
 const box = document.getElementById("items");
 box.innerHTML = picks.map((e, i) => `
 <div class="item" data-i="${i}">
-<h2>『${e.title}』</h2>
+<h2>【${areaLabel(e)}】『${e.title}』</h2>
 <label>ステータス＋日程</label>
 <input type="text" class="f-status" value="${autoLabel(e)} 📅${periodText(e)}">
 <label>概要（一言）</label>
@@ -143,6 +150,7 @@ d.textContent = msg;
 setTimeout(() => d.textContent = "", 2500);
 }
 document.getElementById("draw").onclick = () => { picks = draw(10); render();};
+document.getElementById("scope").onchange = (ev) => { scope = ev.target.value; picks = draw(10); render();};
 document.getElementById("copyAll").onclick = () => {
 const out = document.getElementById("out");
 navigator.clipboard.writeText(out.value).then(() => flash("全部コピーしたよ"));
