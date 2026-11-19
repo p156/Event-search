@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>管理用 | Discord投稿テキスト生成</title>
+<style>
+:root{--bg:#f4f1ec;--card:#fff;--ink:#2b2620;--muted:#8a7f70;--line:#e2d9cb;--accent:#b3541e}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI","Noto Sans JP",sans-serif;background:var(--bg);color:var(--ink)}
+main{max-width:860px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:19px;margin:0 0 4px}
+.sub{color:var(--muted);font-size:12.5px;margin:0 0 14px;line-height:1.6}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+button{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:8px;padding:9px 14px;font-size:13.5px;cursor:pointer}
+button.ghost{background:var(--card);color:var(--accent)}
+button.small{padding:5px 10px;font-size:12px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.item h2{font-size:14.5px;margin:0 0 8px;line-height:1.5}
+.item label{display:block;font-size:11.5px;color:var(--muted);margin:8px 0 3px}
+.item input[type=text],.item textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-size:13.5px;font-family:inherit;background:#fffdf9}
+.item textarea{min-height:56px;resize:vertical;line-height:1.6}
+.item.row{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+#out{width:100%;min-height:300px;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:13.5px;line-height:1.7;font-family:inherit;background:var(--card);white-space:pre-wrap}
+.done{color:var(--accent);font-size:12.5px;margin-left:8px}
+</style>
+</head>
+<body>
+<main>
+<h1>Discord投稿テキスト生成（管理用）</h1>
+<p class="sub">期間限定の開催中・開催予定からランダムで10件を選び、投稿テンプレートに整形します。各項目のラベルと概要はその場で書き換えられます。「この1件だけ差し替え」もできます。</p>
+<div class="bar">
+<button id="draw" type="button">🎲 ランダム10件を引き直す</button>
+<button id="copyAll" class="ghost" type="button">📋 全部コピー</button>
+<span class="done" id="done"></span>
+</div>
+<div id="items"></div>
+<h1 style="font-size:15px;margin-top:22px">出力プレビュー</h1>
+<textarea id="out" readonly></textarea>
+</main>
+<script>
+let DATA = [], picks = [];
+
+function todayJST(){
+const now = new Date();
+const jst = new Date(now.getTime() + (9*60 + now.getTimezoneOffset())*60000);
+return jst.toISOString().slice(0,10);
+}
+const TODAY = todayJST();
+const DAY = 86400000;
+function diffDays(a, b){ return Math.round((new Date(a+"T00:00:00") - new Date(b+"T00:00:00"))/DAY);}
+function md(s){ if(!s) return ""; const p = s.split("-"); return (+p[1])+"/"+(+p[2]);}
+
+function areaLabel(e){
+if (e.category === "online") return "オンライン";
+const p = e.prefecture || e.region || "";
+return p.replace(/県$/,"").replace(/府$/,"").replace(/都$/,"") || "全国";
+}
+function autoLabel(e){
+const until = e.startDate? diffDays(e.startDate, TODAY): null;
+const left = e.endDate? diffDays(e.endDate, TODAY): null;
+if (until === 0) return "🆕本日開幕";
+if (until!== null && until > 0 && until <= 7) return "🆕開幕直前";
+if (until!== null && until > 7) return "📢開催予定";
+if (left!== null && left <= 7) return "⏰まもなく終了";
+return "🎪開催中";
+}
+function periodText(e){
+if (e.ongoing &&!e.endDate) return "常時開催";
+const a = md(e.startDate), b = md(e.endDate);
+if (a && b) return a+"〜"+b;
+if (a) return a+"〜";
+return b? "〜"+b: "";
+}
+function autoSummary(e){
+let t = (e.description || "").replace(/\s+/g,"");
+if (t.length <= 70) return t;
+const cut = t.slice(0, 70);
+const last = Math.max(cut.lastIndexOf("。"), cut.lastIndexOf("、"));
+return (last > 30? cut.slice(0, last+1): cut) + "";
+}
+function pool(){
+return DATA.filter(e => e.venueType!== "permanent" && e.category!== "online"
+&& (!e.endDate || e.endDate >= TODAY));
+}
+function draw(n, exclude){
+const p = pool().filter(e =>!(exclude||[]).includes(e.id));
+const arr = [...p];
+for (let i = arr.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [arr[i],arr[j]] = [arr[j],arr[i]];}
+return arr.slice(0, n);
+}
+function render(){
+const box = document.getElementById("items");
+box.innerHTML = picks.map((e, i) => `
+<div class="item" data-i="${i}">
+<h2>『${e.title}』</h2>
+<label>ステータス＋日程</label>
+<input type="text" class="f-status" value="${autoLabel(e)} 📅${periodText(e)}">
+<label>概要（一言）</label>
+<textarea class="f-summary">${autoSummary(e)}</textarea>
+<label>公式URL</label>
+<input type="text" class="f-url" value="${e.eventUrl || ""}">
+<div class="row">
+<button type="button" class="small ghost swap">この1件だけ差し替え</button>
+<button type="button" class="small ghost copy1">この1件をコピー</button>
+</div>
+</div>`).join("");
+box.querySelectorAll(".item").forEach(el => {
+el.querySelectorAll("input,textarea").forEach(f => f.addEventListener("input", updateOut));
+el.querySelector(".swap").onclick = () => {
+const i = +el.dataset.i;
+const rep = draw(1, picks.map(p => p.id));
+if (rep.length) picks[i] = rep[0];
+render();
+};
+el.querySelector(".copy1").onclick = () => {
+navigator.clipboard.writeText(blockFor(el)).then(() => flash("1件コピーしたよ"));
+};
+});
+updateOut();
+}
+function blockFor(el){
+const title = el.querySelector("h2").textContent;
+const status = el.querySelector(".f-status").value.trim();
+const summary = el.querySelector(".f-summary").value.trim();
+const url = el.querySelector(".f-url").value.trim();
+return `${title}\n${status}\n\n${summary}\n🌕${url}`;
+}
+function updateOut(){
+const blocks = [...document.querySelectorAll(".item")].map(blockFor);
+document.getElementById("out").value = blocks.join("\n\n");
+}
+function flash(msg){
+const d = document.getElementById("done");
+d.textContent = msg;
+setTimeout(() => d.textContent = "", 2500);
+}
+document.getElementById("draw").onclick = () => { picks = draw(10); render();};
+document.getElementById("copyAll").onclick = () => {
+const out = document.getElementById("out");
+navigator.clipboard.writeText(out.value).then(() => flash("全部コピーしたよ"));
+};
+
+fetch("events.json").then(r => r.json()).then(j => {
+DATA = j.events || [];
+picks = draw(10);
+render();
+}).catch(() => {
+document.getElementById("items").innerHTML = "<p>データを読み込めませんでした。</p>";
+});
+</script>
+</body>
+</html>
