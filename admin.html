@@ -75,10 +75,16 @@ return b? "〜"+b: "";
 }
 function autoSummary(e){
 let t = (e.description || "").replace(/\s+/g,"");
-if (t.length <= 70) return t;
-const cut = t.slice(0, 70);
-const last = Math.max(cut.lastIndexOf("。"), cut.lastIndexOf("、"));
-return (last > 30? cut.slice(0, last+1): cut) + "";
+if (!t) return "";
+const sentences = t.match(/[^。！？]+[。！？]/g);
+if (!sentences) return t.length <= 120 ? t : t.slice(0, 120);
+let out = "";
+for (const s of sentences){
+  if (out && (out + s).length > 120) break;
+  out += s;
+  if (out.length >= 60) break;
+}
+return out || t;
 }
 function pool(){
 return DATA.filter(e => e.venueType!== "permanent" && e.category!== "online"
