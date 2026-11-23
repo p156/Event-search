@@ -56,6 +56,8 @@
   .prods .pl a{font-size:12px;text-decoration:none;border:1px solid var(--accent);color:var(--accent);border-radius:6px;padding:3px 9px}
   .prods .pl a.ticket{background:var(--accent);color:#fff}
   .preview{font-size:12.5px;color:var(--muted);line-height:1.7}
+  .tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+  .tag{font-size:11px;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:2px 9px;font-weight:600}
   .empty{color:var(--muted);text-align:center;padding:40px 0}
   footer{max-width:1080px;margin:0 auto;padding:0 16px 40px;color:var(--muted);font-size:12px;line-height:1.7}
 </style>
@@ -126,7 +128,7 @@ function esc(s){ return (s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;
 function renderTabs(){
   const counts = {};
   DATA.forEach(e => { const t = tabOf(e); counts[t] = (counts[t]||0)+1; });
-  counts.store = new Set(DATA.filter(e => e.venueType === "permanent").map(storeKey)).size;
+  counts.store = CARDS.length;
   document.getElementById("tabs").innerHTML = TABS.map(t =>
     `<button class="tab ${t.key===tab?"active":""}" data-tab="${t.key}">${t.label}<span class="n">${counts[t.key]||0}</span></button>`
   ).join("");
@@ -178,79 +180,178 @@ function card(e){
     </div>
   </div></article>`;
 }
-function storeKey(e){
-  let v = (e.venue||"").replace(/（[^）]*）/g,"").trim();
-  v = v.split("／")[0].trim();
-  if (v.startsWith("東京ミステリーサーカス")) return "東京ミステリーサーカス";
-  return v || e.title;
+function stripParens(s){
+  let prev = "", cur = s || "";
+  while (prev !== cur){ prev = cur; cur = cur.replace(/（[^（）]*）/g, ""); }
+  return cur.trim();
 }
-function prodKey(e){
-  return e.title.replace(/（[^）]*）\s*$/,"").replace(/\s+/g,"");
-}
-function dedupeProds(list){
-  const map = new Map();
-  for (const e of list){
-    const k = prodKey(e);
-    const cur = map.get(k);
-    if (!cur){ map.set(k, e); continue; }
-    const score = x => (x.endDate||"9999") + (x.ticketUrl?1:0) + (x.imageUrl?1:0);
-    if (score(e) > score(cur)) map.set(k, e);
+function nospace(s){ return (s||"").replace(/[\s　]+/g, ""); }
+const STORE_STOP = new Set(["神戸","横浜","大塚","梅田","天神","仙台","名古屋","豊洲","那覇","神戸・三宮","長居植物園","麻布台ヒルズ","天神エリア","那覇市内"]);
+const HOUSE_IDS = new Set([211, 212]);
+function chainHits(e){
+  const tm = (e.title||"").match(/^イマーシブジャーニー[\s　]*(.+)$/);
+  if (tm){
+    const lbl = tm[1].trim();
+    return [{key:"brand:イマーシブジャーニー", name:"イマーシブジャーニー", label:lbl, full:"イマーシブジャーニー"+lbl}];
   }
-  return [...map.values()];
+  const venues = (e.runs||[]).map(r => r.venue||"").filter(Boolean);
+  const list = venues.length ? venues : [e.venue||""];
+  const seen = new Set();
+  const hits = [];
+  for (const v of list){
+    const s = stripParens(v);
+    let hit = null, m;
+    if (s.includes("東京ミステリーサーカス") || s.includes("TOKYO MYSTERY CIRCUS"))
+      hit = {key:"store:東京ミステリーサーカス", name:"東京ミステリーサーカス", label:"東京ミステリーサーカス", full:"東京ミステリーサーカス"};
+    else if ((m = s.match(/^リアル脱出ゲーム[\s　]*(.+?)店/)))
+      hit = {key:"brand:リアル脱出ゲーム", name:"リアル脱出ゲーム", label:m[1], full:"リアル脱出ゲーム"+m[1]+"店"};
+    else if ((m = s.match(/探偵キャンプ[\s　]*(.+?店)/)))
+      hit = {key:"brand:探偵キャンプ", name:"探偵キャンプ", label:m[1].replace(/店$/,"").replace(/^劇場[\s　]*/,"").trim(), full:"探偵キャンプ"+m[1]};
+    else if (s.includes("クインズワルツ"))
+      hit = {key:"store:クインズワルツ大塚店", name:"クインズワルツ大塚店", label:"大塚", full:"クインズワルツ大塚店"};
+    else if (s.includes("ジョルディーノ")){
+      if (s.includes("ザナティブ")) hit = {key:"store:ジョルディーノ／ザナティブ", name:"ジョルディーノ／ザナティブ", label:"ザナティブ", full:"ジョルディーノ／ザナティブ"};
+      else if (s.includes("立川") || s.includes("吉祥寺")) hit = {key:"store:ジョルディーノ立川・吉祥寺", name:"ジョルディーノ立川・吉祥寺", label:"立川・吉祥寺", full:"ジョルディーノ立川・吉祥寺"};
+    }
+    else if ((m = s.match(/イマーシブジャーニー[\s　]*(\S+)/)))
+      hit = {key:"brand:イマーシブジャーニー", name:"イマーシブジャーニー", label:m[1], full:"イマーシブジャーニー"+m[1]};
+    if (hit && !seen.has(hit.key+hit.label)){ seen.add(hit.key+hit.label); hits.push(hit); }
+  }
+  return hits;
 }
-function prodState(e){
-  if (e.endDate && e.endDate < TODAY) return "past";
-  if (e.startDate && e.startDate > TODAY) return "upcoming";
+function singleCardName(e){
+  const venues = (e.runs||[]).map(r => stripParens(r.venue||"")).filter(Boolean);
+  const list = venues.length ? venues : [stripParens(e.venue||"")];
+  const cands = list.filter(v => v && !STORE_STOP.has(v) && !v.endsWith("市内") && !v.endsWith("周辺") && !v.endsWith("エリア"));
+  for (const c of cands){ if ((e.title||"").includes(c)) return c; }
+  if (!(e.title||"").includes("『") && !(e.title||"").includes("からの脱出") && !/公演\s*$/.test(e.title||"")) return e.title;
+  if (cands.length) return cands.reduce((a,b) => a.length <= b.length ? a : b);
+  if (!(e.title||"").includes("『")) return e.title;
+  const m = (e.title||"").match(/『(.+?)』/);
+  return m ? m[1] : e.title;
+}
+function stateOf(s, en){
+  if (en && en < TODAY) return "past";
+  if (s && s > TODAY) return "upcoming";
   return "now";
 }
-function prodRow(e){
-  return `<li><div class="pt">${esc(e.title)}</div>
-    <div class="pm">${period(e)}${e.priceText?` ・ ${esc(e.priceText)}`:""}</div>
+function prodKeyOf(t){ return nospace((t||"").replace(/（[^）]*）\s*$/, "")); }
+function isHouse(e, cardName, storeFull){
+  if (HOUSE_IDS.has(e.id)) return true;
+  const t = nospace((e.title||"").replace(/（[^）]*）\s*$/, ""));
+  for (const cand of [nospace(cardName), nospace(storeFull)]){
+    if (!cand) continue;
+    if (t === cand) return true;
+    if (t.startsWith(cand) && /^(＝.*|公演|レギュラー公演|オープン公演|店舗公演|マーダーミステリー公演)$/.test(t.slice(cand.length))) return true;
+  }
+  if ((cardName === "探偵キャンプ" || cardName === "イマーシブジャーニー") && nospace(e.title).startsWith(nospace(cardName)) && !(e.title||"").includes("『") && !(e.title||"").includes("からの脱出")) return true;
+  return false;
+}
+let CARDS = [];
+function buildCards(){
+  const map = new Map();
+  const add = (key, name, e, label, full) => {
+    if (!map.has(key)) map.set(key, {key, name, isBrand: key.startsWith("brand:"), entries: []});
+    map.get(key).entries.push({e, label, full});
+  };
+  DATA.filter(e => e.venueType === "permanent").forEach(e => {
+    const hits = chainHits(e);
+    if (hits.length) hits.forEach(h => add(h.key, h.name, e, h.label, h.full));
+    else { const n = singleCardName(e); add("store:"+n, n, e, n, n); }
+  });
+  const cards = [];
+  map.forEach(c => {
+    const prods = new Map();
+    const house = [];
+    c.entries.forEach(({e, label, full}) => {
+      if (isHouse(e, c.name, full)){ house.push({label, e}); return; }
+      const k = prodKeyOf(e.title);
+      if (!prods.has(k)) prods.set(k, {title: e.title.replace(/（[^）]*）\s*$/, ""), items: []});
+      prods.get(k).items.push({e, label});
+    });
+    const plist = [...prods.values()].map(p => {
+      const tags = new Set(); const states = new Set();
+      let rep = p.items[0].e, repScore = "";
+      const starts = [], ends = [];
+      let openEnd = false;
+      p.items.forEach(({e, label}) => {
+        const score = (e.endDate||"9999") + (e.ticketUrl?1:0) + (e.imageUrl?1:0);
+        if (score > repScore){ repScore = score; rep = e; }
+        const runs = (e.runs||[]).length ? e.runs : [{venue: e.venue, startDate: e.startDate, endDate: e.endDate}];
+        runs.forEach(r => {
+          const rh = chainHits({title: e.title, runs: [r], venue: r.venue});
+          let labs = rh.filter(h => h.key === c.key).map(h => h.label);
+          if (!labs.length && !c.isBrand) labs = [label];
+          if (!labs.length) return;
+          const st = stateOf(r.startDate, r.endDate);
+          states.add(st);
+          if (st === "now") labs.forEach(l => tags.add(l));
+          if (r.startDate) starts.push(r.startDate);
+          if (r.endDate) ends.push(r.endDate); else openEnd = true;
+        });
+      });
+      const state = states.has("now") ? "now" : (states.has("upcoming") ? "upcoming" : "past");
+      const span = {startDate: starts.length ? starts.sort()[0] : rep.startDate, endDate: openEnd ? null : (ends.length ? ends.sort()[ends.length-1] : rep.endDate), ongoing: openEnd};
+      return {title: p.title, rep, tags: [...tags], state, span};
+    });
+    c.prods = plist;
+    c.house = house;
+    c.members = c.entries.map(x => x.e);
+    cards.push(c);
+  });
+  cards.sort((a,b) => (b.prods.length - a.prods.length) || a.name.localeCompare(b.name, "ja"));
+  return cards;
+}
+function prodRow2(p, isBrand){
+  const e = p.rep;
+  const tags = (isBrand && p.tags.length) ? `<div class="tags">${p.tags.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div>` : "";
+  return `<li><div class="pt">${esc(p.title)}</div>
+    <div class="pm">${period(p.span)}${e.priceText?` ・ ${esc(e.priceText)}`:""}</div>
+    ${tags}
     <div class="pl">${e.eventUrl?`<a href="${esc(e.eventUrl)}" target="_blank" rel="noopener">公式</a>`:""}${e.ticketUrl?`<a class="ticket" href="${esc(e.ticketUrl)}" target="_blank" rel="noopener">チケット・参加</a>`:""}</div></li>`;
 }
-function storeCard(name, prods){
-  const now = prods.filter(e => prodState(e)==="now");
-  const up = prods.filter(e => prodState(e)==="upcoming");
-  const past = prods.filter(e => prodState(e)==="past");
-  const first = prods[0];
-  const withImg = prods.find(e => e.imageUrl);
+function houseRow(h){
+  const e = h.e;
+  return `<li><div class="pt">${esc(h.label)}</div>
+    ${e.description?`<div class="pm">${esc(e.description)}</div>`:""}
+    ${e.priceText?`<div class="pm">${esc(e.priceText)}</div>`:""}
+    <div class="pl">${e.eventUrl?`<a href="${esc(e.eventUrl)}" target="_blank" rel="noopener">公式</a>`:""}${e.ticketUrl?`<a class="ticket" href="${esc(e.ticketUrl)}" target="_blank" rel="noopener">チケット・参加</a>`:""}</div></li>`;
+}
+function storeCard2(c){
+  const now = c.prods.filter(p => p.state === "now");
+  const up = c.prods.filter(p => p.state === "upcoming");
+  const past = c.prods.filter(p => p.state === "past");
+  const first = c.members[0];
+  const withImg = c.members.find(e => e.imageUrl);
   const counts = [now.length?`開催中${now.length}件`:"", up.length?`開催予定${up.length}件`:""].filter(Boolean).join("・");
-  const preview = now.slice(0,3).map(e => esc(e.title)).join("<br>");
+  const preview = now.slice(0,3).map(p => esc(p.title)).join("<br>");
   const sections = [
-    now.length?`<p class="pm" style="font-weight:600;font-size:12.5px">いまやってる公演</p><ul class="prods">${now.map(prodRow).join("")}</ul>`:"",
-    up.length?`<p class="pm" style="font-weight:600;font-size:12.5px">開催予定</p><ul class="prods">${up.map(prodRow).join("")}</ul>`:"",
-    past.length?`<p class="pm" style="font-weight:600;font-size:12.5px">終了済み</p><ul class="prods">${past.map(prodRow).join("")}</ul>`:"",
+    now.length?`<p class="pm" style="font-weight:600;font-size:12.5px">いまやってる公演</p><ul class="prods">${now.map(p => prodRow2(p, c.isBrand)).join("")}</ul>`:"",
+    up.length?`<p class="pm" style="font-weight:600;font-size:12.5px">開催予定</p><ul class="prods">${up.map(p => prodRow2(p, c.isBrand)).join("")}</ul>`:"",
+    past.length?`<p class="pm" style="font-weight:600;font-size:12.5px">終了済み</p><ul class="prods">${past.map(p => prodRow2(p, c.isBrand)).join("")}</ul>`:"",
+    c.house.length?`<p class="pm" style="font-weight:600;font-size:12.5px">常設コンテンツ</p><ul class="prods">${c.house.map(houseRow).join("")}</ul>`:"",
   ].join("");
+  const total = c.prods.length + c.house.length;
   return `<article class="card">${withImg?`<img src="${esc(withImg.imageUrl)}" alt="" loading="lazy" onerror="this.remove()">`:""}<div class="body">
-    <h2>${esc(name)}</h2>
+    <h2>${esc(c.name)}</h2>
     <div class="meta">${esc(first.prefecture||"")}${first.region?` ・ ${esc(first.region)}`:""}<br>${counts}</div>
     ${preview?`<div class="preview">${preview}</div>`:""}
-    <details><summary>公演一覧（${prods.length}件）</summary>${sections}</details>
+    <details><summary>公演一覧（${total}件）</summary>${sections}</details>
   </div></article>`;
 }
-function storeMatches(name, prods){
-  if (regionSel.size && !prods.some(e => regionSel.has(e.region))) return false;
-  if (genreSel.size && !prods.some(e => (e.genres||[]).some(g => genreSel.has(g)))) return false;
+function cardMatches(c){
+  if (regionSel.size && !c.members.some(e => regionSel.has(e.region))) return false;
+  if (genreSel.size && !c.members.some(e => (e.genres||[]).some(g => genreSel.has(g)))) return false;
   if (query){
-    const hay = name + " " + prods.map(e => [e.title, e.venue, e.prefecture].join(" ")).join(" ");
+    const hay = c.name + " " + c.members.map(e => [e.title, e.venue, e.prefecture].join(" ")).join(" ") + " " + c.entries.map(x => x.label + " " + x.full).join(" ");
     if (!hay.includes(query)) return false;
   }
   return true;
 }
 function renderStores(){
-  const groups = new Map();
-  DATA.filter(e => e.venueType === "permanent").forEach(e => {
-    const k = storeKey(e);
-    if (!groups.has(k)) groups.set(k, []);
-    groups.get(k).push(e);
-  });
-  const cards = [];
-  groups.forEach((prods, name) => {
-    const dd = dedupeProds(prods);
-    if (storeMatches(name, dd)) cards.push(storeCard(name, dd));
-  });
-  document.getElementById("grid").innerHTML = cards.join("");
-  document.getElementById("empty").style.display = cards.length ? "none" : "block";
+  const list = CARDS.filter(cardMatches);
+  document.getElementById("grid").innerHTML = list.map(storeCard2).join("");
+  document.getElementById("empty").style.display = list.length ? "none" : "block";
 }
 function render(){
   renderTabs(); renderChips();
@@ -265,6 +366,7 @@ document.getElementById("filterBtn").onclick = () => document.getElementById("fi
 
 fetch("events.json").then(r => r.json()).then(j => {
   DATA = j.events || [];
+  CARDS = buildCards();
   document.getElementById("updated").textContent = `収録 ${DATA.length} 件（${j.generatedAt} 時点のデータ）`;
   render();
 }).catch(() => {
