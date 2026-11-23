@@ -48,6 +48,14 @@
   details{font-size:13px;line-height:1.7;border-top:1px dashed var(--line);padding-top:8px}
   details summary{cursor:pointer;color:var(--accent);font-size:12.5px}
   .runs{margin:6px 0 0;padding-left:16px}
+  .prods{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+  .prods li{border-top:1px dashed var(--line);padding-top:8px}
+  .prods .pt{font-weight:600;font-size:13.5px;line-height:1.5}
+  .prods .pm{font-size:12px;color:var(--muted);line-height:1.6}
+  .prods .pl{display:flex;gap:8px;margin-top:4px}
+  .prods .pl a{font-size:12px;text-decoration:none;border:1px solid var(--accent);color:var(--accent);border-radius:6px;padding:3px 9px}
+  .prods .pl a.ticket{background:var(--accent);color:#fff}
+  .preview{font-size:12.5px;color:var(--muted);line-height:1.7}
   .empty{color:var(--muted);text-align:center;padding:40px 0}
   footer{max-width:1080px;margin:0 auto;padding:0 16px 40px;color:var(--muted);font-size:12px;line-height:1.7}
 </style>
@@ -118,6 +126,7 @@ function esc(s){ return (s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;
 function renderTabs(){
   const counts = {};
   DATA.forEach(e => { const t = tabOf(e); counts[t] = (counts[t]||0)+1; });
+  counts.store = new Set(DATA.filter(e => e.venueType === "permanent").map(storeKey)).size;
   document.getElementById("tabs").innerHTML = TABS.map(t =>
     `<button class="tab ${t.key===tab?"active":""}" data-tab="${t.key}">${t.label}<span class="n">${counts[t.key]||0}</span></button>`
   ).join("");
@@ -169,8 +178,83 @@ function card(e){
     </div>
   </div></article>`;
 }
+function storeKey(e){
+  let v = (e.venue||"").replace(/（[^）]*）/g,"").trim();
+  v = v.split("／")[0].trim();
+  if (v.startsWith("東京ミステリーサーカス")) return "東京ミステリーサーカス";
+  return v || e.title;
+}
+function prodKey(e){
+  return e.title.replace(/（[^）]*）\s*$/,"").replace(/\s+/g,"");
+}
+function dedupeProds(list){
+  const map = new Map();
+  for (const e of list){
+    const k = prodKey(e);
+    const cur = map.get(k);
+    if (!cur){ map.set(k, e); continue; }
+    const score = x => (x.endDate||"9999") + (x.ticketUrl?1:0) + (x.imageUrl?1:0);
+    if (score(e) > score(cur)) map.set(k, e);
+  }
+  return [...map.values()];
+}
+function prodState(e){
+  if (e.endDate && e.endDate < TODAY) return "past";
+  if (e.startDate && e.startDate > TODAY) return "upcoming";
+  return "now";
+}
+function prodRow(e){
+  return `<li><div class="pt">${esc(e.title)}</div>
+    <div class="pm">${period(e)}${e.priceText?` ・ ${esc(e.priceText)}`:""}</div>
+    <div class="pl">${e.eventUrl?`<a href="${esc(e.eventUrl)}" target="_blank" rel="noopener">公式</a>`:""}${e.ticketUrl?`<a class="ticket" href="${esc(e.ticketUrl)}" target="_blank" rel="noopener">チケット・参加</a>`:""}</div></li>`;
+}
+function storeCard(name, prods){
+  const now = prods.filter(e => prodState(e)==="now");
+  const up = prods.filter(e => prodState(e)==="upcoming");
+  const past = prods.filter(e => prodState(e)==="past");
+  const first = prods[0];
+  const withImg = prods.find(e => e.imageUrl);
+  const counts = [now.length?`開催中${now.length}件`:"", up.length?`開催予定${up.length}件`:""].filter(Boolean).join("・");
+  const preview = now.slice(0,3).map(e => esc(e.title)).join("<br>");
+  const sections = [
+    now.length?`<p class="pm" style="font-weight:600;font-size:12.5px">いまやってる公演</p><ul class="prods">${now.map(prodRow).join("")}</ul>`:"",
+    up.length?`<p class="pm" style="font-weight:600;font-size:12.5px">開催予定</p><ul class="prods">${up.map(prodRow).join("")}</ul>`:"",
+    past.length?`<p class="pm" style="font-weight:600;font-size:12.5px">終了済み</p><ul class="prods">${past.map(prodRow).join("")}</ul>`:"",
+  ].join("");
+  return `<article class="card">${withImg?`<img src="${esc(withImg.imageUrl)}" alt="" loading="lazy" onerror="this.remove()">`:""}<div class="body">
+    <h2>${esc(name)}</h2>
+    <div class="meta">${esc(first.prefecture||"")}${first.region?` ・ ${esc(first.region)}`:""}<br>${counts}</div>
+    ${preview?`<div class="preview">${preview}</div>`:""}
+    <details><summary>公演一覧（${prods.length}件）</summary>${sections}</details>
+  </div></article>`;
+}
+function storeMatches(name, prods){
+  if (regionSel.size && !prods.some(e => regionSel.has(e.region))) return false;
+  if (genreSel.size && !prods.some(e => (e.genres||[]).some(g => genreSel.has(g)))) return false;
+  if (query){
+    const hay = name + " " + prods.map(e => [e.title, e.venue, e.prefecture].join(" ")).join(" ");
+    if (!hay.includes(query)) return false;
+  }
+  return true;
+}
+function renderStores(){
+  const groups = new Map();
+  DATA.filter(e => e.venueType === "permanent").forEach(e => {
+    const k = storeKey(e);
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(e);
+  });
+  const cards = [];
+  groups.forEach((prods, name) => {
+    const dd = dedupeProds(prods);
+    if (storeMatches(name, dd)) cards.push(storeCard(name, dd));
+  });
+  document.getElementById("grid").innerHTML = cards.join("");
+  document.getElementById("empty").style.display = cards.length ? "none" : "block";
+}
 function render(){
   renderTabs(); renderChips();
+  if (tab === "store"){ renderStores(); return; }
   const list = DATA.filter(matches);
   list.sort((a,b) => (a.endDate||"9999").localeCompare(b.endDate||"9999"));
   document.getElementById("grid").innerHTML = list.map(card).join("");
