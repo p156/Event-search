@@ -343,7 +343,11 @@ function chainHits(e){
   for (const v of list){
     const s = stripParens(v);
     let hit = null, m;
-    if (s.includes("リドラの謎解きスタジオ"))
+    if (s.includes("もぬけのホール"))
+      hit = {key:"store:もぬけのホール", name:"もぬけのホール", label:"もぬけのホール", full:"もぬけのホール"};
+    else if (s.includes("劇場ビット"))
+      hit = {key:"store:劇場ビット", name:"劇場ビット", label:"劇場ビット", full:"劇場ビット"};
+    else if (s.includes("リドラの謎解きスタジオ"))
       hit = {key:"store:リドラの謎解きスタジオ", name:"リドラの謎解きスタジオ", label:"リドラの謎解きスタジオ", full:"リドラの謎解きスタジオ"};
     else if (s.includes("NANICA") && s.includes("下北沢"))
       hit = {key:"store:NANICA 下北沢店", name:"NANICA 下北沢店", label:"NANICA 下北沢店", full:"NANICA 下北沢店"};
