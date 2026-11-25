@@ -3,27 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>体験型イベントまとめ | イマーシブ・脱出・謎解き（大人向け・全国）</title>
-<meta name="description" content="大人でも楽しめる体験型イベント（イマーシブ／脱出ゲーム／謎解き／マーダーミステリー等）を全国から収集したまとめサイト。期間限定イベントと常設店舗を分けて掲載。">
+<title>Best Before Event | 賞味期限つきの体験型イベントまとめ</title>
+<meta name="description" content="大人でも楽しめる体験型イベント（イマーシブ／脱出ゲーム／謎解き／マーダーミステリー等）を全国から収集。期間限定イベントと常設店舗を分けて掲載する、賞味期限つきの体験まとめサイト。">
 <style>
   :root{
     --bg:#faf7f2; --card:#ffffff; --ink:#2b2620; --muted:#8a7f70; --line:#e7ded2;
     --accent:#b3541e; --accent-soft:#f6e3d3; --red:#c0392b; --chip:#f1e9dd;
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI","Noto Sans JP",sans-serif;background:var(--bg);color:var(--ink)}
-  header{padding:28px 16px 8px;max-width:1080px;margin:0 auto}
-  h1{font-size:24px;margin:0 0 6px}
-  .sub{color:var(--muted);font-size:13px;margin:0 0 4px}
-  .updated{color:var(--muted);font-size:12px}
+  body{margin:0;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI","Noto Sans JP",sans-serif;color:var(--ink);
+    background-color:var(--bg);
+    background-image:repeating-linear-gradient(0deg, rgba(179,84,30,.025) 0 2px, transparent 2px 6px),repeating-linear-gradient(90deg, rgba(179,84,30,.025) 0 2px, transparent 2px 6px);}
   main{max-width:1080px;margin:0 auto;padding:8px 16px 48px}
+  /* ===== home ===== */
+  .gingham{border-radius:14px;padding:18px 14px 14px;margin-top:14px;
+    background-image:linear-gradient(rgba(192,57,43,.07) 50%, transparent 50%),linear-gradient(90deg, rgba(192,57,43,.07) 50%, transparent 50%);
+    background-size:34px 34px;background-color:#fdfaf5;border:1px solid var(--line)}
+  .labelbox{border:2px solid var(--ink);border-radius:6px;background:#fff;padding:16px 16px 12px;box-shadow:0 0 0 4px #fff, 0 0 0 6px var(--ink), 0 10px 24px rgba(43,38,32,.12);max-width:640px;margin:6px auto 0}
+  .brandline{display:flex;align-items:center;gap:12px;justify-content:center}
+  .brandline .seal{flex:none}
+  .sitename{font-size:27px;font-weight:800;letter-spacing:.02em;margin:0;line-height:1.15}
+  .sitesub{text-align:center;color:var(--muted);font-size:12.5px;margin:8px 0 10px}
+  .labelbox table{width:100%;border-collapse:collapse;font-size:12.5px}
+  .labelbox td{border-top:1px solid var(--line);padding:6px 4px}
+  .labelbox td.k{width:32%;color:var(--muted)}
+  .labelbox td.v{font-weight:700}
+  .tickerwrap{max-width:860px;margin:16px auto 0}
+  .tickerlb{font-size:12px;font-weight:800;margin:0 0 6px}
+  .ticker{overflow:hidden;white-space:nowrap;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+  .ticker-in{display:inline-flex;gap:8px;padding-right:8px;animation:mq 32s linear infinite}
+  .ticker:hover .ticker-in{animation-play-state:paused}
+  @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .tchip{border:1px solid var(--accent);color:var(--accent);background:#fff;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+  .divider{text-align:center;margin:14px 0 4px;opacity:.85}
+  .panels{display:flex;gap:12px;max-width:860px;margin:10px auto 6px}
+  .panel{flex:1;border:1px solid var(--line);border-radius:18px;padding:22px 10px 18px;cursor:pointer;text-align:center;color:var(--ink);
+    background:radial-gradient(circle at 50% 42%, #ffffff 0 52%, #f7efe0 78%, #efe3cd 100%);
+    box-shadow:inset 0 0 0 6px #fff, inset 0 0 0 8px var(--line), 0 6px 16px rgba(43,38,32,.08);font-family:inherit}
+  .panel .big{display:block;font-size:19px;font-weight:800}
+  .panel .sm{display:block;font-size:12px;color:var(--muted);margin-top:5px}
+  .panel:hover{border-color:var(--accent)}
+  /* ===== sub pages ===== */
+  .minihead{display:flex;align-items:center;gap:9px;max-width:1080px;margin:0 auto;padding:14px 16px 0}
+  .minihead .seal{flex:none}
+  .minihead .mn{font-weight:800;font-size:16px}
+  .minihead .back{margin-left:auto;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:7px 12px;font-size:13px;cursor:pointer;font-family:inherit}
   .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 10px}
-  .tab{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;font-size:14px;cursor:pointer}
+  .tab{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;font-size:14px;cursor:pointer;font-family:inherit}
   .tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
   .tab .n{opacity:.75;font-size:12px;margin-left:4px}
   .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0 12px}
-  .toolbar input[type=search]{flex:1;min-width:180px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:var(--card)}
-  .toolbar button{padding:9px 12px;border:1px solid var(--line);background:var(--card);border-radius:8px;cursor:pointer;font-size:13px}
+  .toolbar input[type=search]{flex:1;min-width:180px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:var(--card);font-family:inherit}
+  .toolbar button{padding:9px 12px;border:1px solid var(--line);background:var(--card);border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit}
   .filters{display:none;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:12px;margin-bottom:14px}
   .filters.open{display:block}
   .filters h3{font-size:12px;color:var(--muted);margin:10px 0 6px}
@@ -40,8 +71,8 @@
   .price{font-size:13px}
   .genres{display:flex;gap:5px;flex-wrap:wrap}
   .genre{font-size:11px;background:var(--chip);border-radius:4px;padding:2px 7px}
-  .badge{align-self:flex-start;font-size:11.5px;border-radius:999px;padding:2px 9px;background:var(--accent-soft);color:var(--accent);font-weight:600}
-  .badge.soon{background:#fbe3de;color:var(--red)}
+  .exp{align-self:flex-start;font-size:11.5px;font-weight:700;border:1.5px solid var(--red);color:var(--red);border-radius:4px;padding:2px 8px;background:#fff}
+  .exp.far{border-color:var(--muted);color:var(--muted)}
   .links{display:flex;gap:8px;margin-top:auto;padding-top:6px}
   .links a{font-size:13px;text-decoration:none;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:6px 12px}
   .links a.ticket{background:var(--accent);color:#fff}
@@ -58,34 +89,106 @@
   .preview{font-size:12.5px;color:var(--muted);line-height:1.7}
   .tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
   .tag{font-size:11px;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:2px 9px;font-weight:600}
+  .gtags{display:flex;gap:5px;flex-wrap:wrap}
+  .gtag{font-size:11px;border:1px solid var(--accent);color:var(--accent);border-radius:999px;padding:2px 9px;font-weight:700}
   .empty{color:var(--muted);text-align:center;padding:40px 0}
+  .hl{outline:3px solid var(--red);outline-offset:2px;transition:outline-color .3s}
   footer{max-width:1080px;margin:0 auto;padding:0 16px 40px;color:var(--muted);font-size:12px;line-height:1.7}
+  /* ===== intro ===== */
+  #intro{position:fixed;inset:0;z-index:60;background:#fdfaf5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;
+    background-image:linear-gradient(rgba(192,57,43,.07) 50%, transparent 50%),linear-gradient(90deg, rgba(192,57,43,.07) 50%, transparent 50%);background-size:34px 34px}
+  #intro.done{opacity:0;pointer-events:none;transition:opacity .45s}
+  #intro .stage{position:relative;width:280px;height:210px}
+  #intro .logo-under{position:absolute;left:50%;top:86px;transform:translateX(-50%);text-align:center;opacity:0;transition:opacity .3s}
+  #intro.reveal .logo-under{opacity:1}
+  #intro .logo-under .nm{font-weight:800;font-size:19px;margin-top:6px}
+  #intro .cloche{position:absolute;left:50%;top:8px;transform:translateX(-50%);transition:transform .55s ease-in, opacity .55s ease-in}
+  #intro.reveal .cloche{transform:translateX(-50%) translateY(-46px) rotate(-16deg);opacity:0}
+  #intro .plate{position:absolute;left:50%;top:118px;transform:translateX(-50%);width:230px;height:26px;border:2px solid #c9bda6;border-radius:50%;background:#fff}
+  #intro .timer{position:absolute;right:-6px;top:0;text-align:center;opacity:0;transition:opacity .3s}
+  #intro.reveal .timer{opacity:1}
+  #intro .timer .num{font-size:24px;font-weight:800;color:var(--red)}
+  #intro .timer .cap{font-size:10.5px;color:var(--muted)}
+  #intro .stamp{position:absolute;left:50%;top:74px;transform:translateX(-50%) rotate(-12deg) scale(2.4);border:3px solid var(--red);color:var(--red);font-weight:800;font-size:22px;border-radius:6px;padding:3px 14px;opacity:0;background:rgba(255,255,255,.75)}
+  #intro.stamp .stamp{opacity:1;transform:translateX(-50%) rotate(-12deg) scale(1);transition:all .16s ease-out}
+  #intro .skip{font-size:11.5px;color:var(--muted)}
+  @media (prefers-reduced-motion: reduce){ .ticker-in{animation-duration:120s} }
 </style>
 </head>
 <body>
-<header>
-  <h1>体験型イベントまとめ</h1>
-  <p class="sub">大人でも／むしろ大人が楽しめる、イマーシブ・脱出・謎解きなどの期間限定イベントを全国から収集。常設店舗は別タブに分けています。</p>
-  <p class="updated" id="updated"></p>
-</header>
-<main>
-  <nav class="tabs" id="tabs"></nav>
-  <div class="toolbar">
-    <input type="search" id="q" placeholder="タイトル・会場・地域で検索">
-    <button id="filterBtn" type="button">絞り込み（ジャンル・地域）</button>
+
+<div id="intro" aria-hidden="true">
+  <div class="stage">
+    <div class="plate"></div>
+    <div class="logo-under"><span class="seal-logo"></span><div class="nm">Best Before Event</div></div>
+    <div class="cloche"><svg width="240" height="120" viewBox="0 0 240 120"><path d="M20 104 A100 84 0 0 1 220 104 Z" fill="#d9d9de" stroke="#a9a9b2" stroke-width="2"/><circle cx="120" cy="14" r="8" fill="#c6c6cd" stroke="#a9a9b2" stroke-width="2"/><rect x="14" y="104" width="212" height="7" rx="3.5" fill="#bdbdc5"/></svg></div>
+    <div class="timer"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="34" r="24" fill="#fff" stroke="#2b2620" stroke-width="2.5"/><rect x="27" y="2" width="10" height="7" rx="2" fill="#2b2620"/><line id="needle" x1="32" y1="34" x2="32" y2="16" stroke="#c0392b" stroke-width="3" stroke-linecap="round"/></svg><div class="num" id="tnum">3</div><div class="cap">賞味期限まで</div></div>
+    <div class="stamp">期限切れ</div>
   </div>
-  <section class="filters" id="filters">
-    <h3>ジャンル</h3>
-    <div class="chips" id="genreChips"></div>
-    <h3>地域</h3>
-    <div class="chips" id="regionChips"></div>
-  </section>
-  <div class="grid" id="grid"></div>
-  <p class="empty" id="empty" style="display:none">条件に合うイベントがありません。</p>
-</main>
-<footer>
-  <p>掲載情報は各公式ページに基づきます。日程・料金・販売方法は変更される場合があるため、参加前に公式ページでご確認ください。画像は各公式ページのものをリンク表示しています。</p>
-</footer>
+  <div class="skip">タップでスキップ</div>
+</div>
+
+<section id="view-home">
+  <main>
+    <div class="gingham">
+      <div class="labelbox">
+        <div class="brandline"><span class="seal-logo seal-big"></span><h1 class="sitename">Best Before Event</h1></div>
+        <p class="sitesub" id="sitesub">賞味期限つきの体験型イベントまとめ</p>
+        <table>
+          <tr><td class="k">品名</td><td class="v">期間限定イベント・常設店舗</td></tr>
+          <tr><td class="k">賞味期限</td><td class="v">各イベントの終了日まで</td></tr>
+          <tr><td class="k">保存方法</td><td class="v">記憶の中に。</td></tr>
+        </table>
+      </div>
+      <div class="tickerwrap">
+        <p class="tickerlb">おすすめ</p>
+        <div class="ticker"><div class="ticker-in" id="ticker"></div></div>
+      </div>
+      <div class="divider"><svg width="72" height="40" viewBox="0 0 240 120"><path d="M20 104 A100 84 0 0 1 220 104 Z" fill="#d9d9de" stroke="#a9a9b2" stroke-width="4"/><circle cx="120" cy="14" r="9" fill="#c6c6cd" stroke="#a9a9b2" stroke-width="4"/><rect x="14" y="104" width="212" height="8" rx="4" fill="#bdbdc5"/></svg></div>
+      <div class="panels">
+        <button class="panel" id="goEvents"><span class="big">期間限定イベント</span><span class="sm" id="evCount">消えもの</span></button>
+        <button class="panel" id="goStores"><span class="big">店舗</span><span class="sm" id="stCount">常設</span></button>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <p>掲載情報は各公式ページに基づきます。日程・料金・販売方法は変更される場合があるため、参加前に公式ページでご確認ください。画像は各公式ページのものをリンク表示しています。</p>
+  </footer>
+</section>
+
+<section id="view-events" style="display:none">
+  <div class="minihead"><span class="seal-logo seal-sm"></span><span class="mn">Best Before Event</span><button class="back" data-home>← 入り口</button></div>
+  <main>
+    <nav class="tabs" id="tabs"></nav>
+    <div class="toolbar">
+      <input type="search" id="q" placeholder="タイトル・会場・地域で検索">
+      <button id="filterBtn" type="button">絞り込み（ジャンル・地域）</button>
+    </div>
+    <section class="filters" id="filters">
+      <h3>ジャンル</h3>
+      <div class="chips" id="genreChips"></div>
+      <h3>地域</h3>
+      <div class="chips" id="regionChips"></div>
+    </section>
+    <div class="grid" id="grid"></div>
+    <p class="empty" id="empty" style="display:none">条件に合うイベントがありません。</p>
+  </main>
+</section>
+
+<section id="view-stores" style="display:none">
+  <div class="minihead"><span class="seal-logo seal-sm"></span><span class="mn">Best Before Event</span><button class="back" data-home>← 入り口</button></div>
+  <main>
+    <div class="toolbar" style="margin-top:14px">
+      <input type="search" id="sq" placeholder="店舗・公演・地域で検索">
+    </div>
+    <h3 style="font-size:12px;color:var(--muted);margin:4px 0 6px">ジャンル</h3>
+    <div class="chips" id="sgChips" style="margin-bottom:10px"></div>
+    <h3 style="font-size:12px;color:var(--muted);margin:4px 0 6px">地域</h3>
+    <div class="chips" id="srChips" style="margin-bottom:14px"></div>
+    <div class="grid" id="sgrid"></div>
+    <p class="empty" id="sempty" style="display:none">条件に合う店舗がありません。</p>
+  </main>
+</section>
 <script>
 const GENRES = ["謎解き","脱出ゲーム","イマーシブ","マーダーミステリー","ホラー","周遊型","展示","宿泊型","ARG・オンライン","その他"];
 const TABS = [
@@ -93,9 +196,16 @@ const TABS = [
   {key:"upcoming", label:"開催予定"},
   {key:"past", label:"終了済み"},
   {key:"online", label:"オンライン・ARG"},
-  {key:"store", label:"常設店舗"},
 ];
-let DATA = [], tab = "now", genreSel = new Set(), regionSel = new Set(), query = "";
+const SGROUPS = ["すべて","マダミス","謎解き・脱出","イマーシブ","展示"];
+let DATA = [], CARDS = [], GENERATED = "";
+let tab = "now", genreSel = new Set(), regionSel = new Set(), query = "";
+let sGroup = "すべて", sRegionSel = new Set(), sQuery = "";
+
+function sealSVG(px){
+  return `<svg width="${px}" height="${px}" viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="13" fill="#c0392b"/><circle cx="32" cy="24" r="10.5" fill="none" stroke="#fff" stroke-width="3"/><line x1="32" y1="24" x2="32" y2="17" stroke="#fff" stroke-width="3" stroke-linecap="round"/><line x1="32" y1="24" x2="37" y2="27" stroke="#fff" stroke-width="3" stroke-linecap="round"/><text x="32" y="52" text-anchor="middle" font-size="14.5" font-weight="800" fill="#fff" font-family="sans-serif">BBE</text></svg>`;
+}
+document.querySelectorAll(".seal-logo").forEach(el => { el.innerHTML = sealSVG(el.classList.contains("seal-big") ? 54 : (el.closest("#intro") ? 46 : 34)); });
 
 function todayJST(){
   const now = new Date();
@@ -105,7 +215,6 @@ function todayJST(){
 const TODAY = todayJST();
 
 function tabOf(e){
-  if (e.venueType === "permanent") return "store";
   if (e.category === "online") return "online";
   if (e.endDate && e.endDate < TODAY) return "past";
   if (e.startDate && e.startDate > TODAY) return "upcoming";
@@ -117,6 +226,7 @@ function daysLeft(e){
   return Math.round(ms/86400000);
 }
 function fmtDate(s){ return s ? s.replace(/-/g,"/") : ""; }
+function md(s){ return s ? s.slice(5).replace("-","/") : ""; }
 function period(e){
   if (e.ongoing && !e.endDate) return "常時開催";
   const a = fmtDate(e.startDate), b = fmtDate(e.endDate);
@@ -125,25 +235,35 @@ function period(e){
 }
 function esc(s){ return (s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 
+/* ===== views ===== */
+function showView(v){
+  ["home","events","stores"].forEach(x => { document.getElementById("view-"+x).style.display = (x===v) ? "" : "none"; });
+  window.scrollTo(0,0);
+}
+document.getElementById("goEvents").onclick = () => showView("events");
+document.getElementById("goStores").onclick = () => showView("stores");
+document.querySelectorAll("[data-home]").forEach(b => b.onclick = () => showView("home"));
+
+/* ===== events ===== */
 function renderTabs(){
   const counts = {};
-  DATA.forEach(e => { const t = tabOf(e); counts[t] = (counts[t]||0)+1; });
-  counts.store = CARDS.length;
+  DATA.forEach(e => { if (e.venueType === "permanent") return; const t = tabOf(e); counts[t] = (counts[t]||0)+1; });
   document.getElementById("tabs").innerHTML = TABS.map(t =>
     `<button class="tab ${t.key===tab?"active":""}" data-tab="${t.key}">${t.label}<span class="n">${counts[t.key]||0}</span></button>`
   ).join("");
-  document.querySelectorAll(".tab").forEach(b => b.onclick = () => { tab = b.dataset.tab; render(); });
+  document.querySelectorAll(".tab").forEach(b => b.onclick = () => { tab = b.dataset.tab; renderEvents(); });
 }
 function renderChips(){
   const gc = document.getElementById("genreChips");
   gc.innerHTML = GENRES.map(g => `<span class="chip ${genreSel.has(g)?"active":""}" data-g="${g}">${g}</span>`).join("");
-  gc.querySelectorAll(".chip").forEach(c => c.onclick = () => { genreSel.has(c.dataset.g) ? genreSel.delete(c.dataset.g) : genreSel.add(c.dataset.g); render(); });
-  const regions = [...new Set(DATA.map(e => e.region).filter(Boolean))].sort();
+  gc.querySelectorAll(".chip").forEach(c => c.onclick = () => { genreSel.has(c.dataset.g) ? genreSel.delete(c.dataset.g) : genreSel.add(c.dataset.g); renderEvents(); });
+  const regions = [...new Set(DATA.filter(e=>e.venueType!=="permanent").map(e => e.region).filter(Boolean))].sort();
   const rc = document.getElementById("regionChips");
   rc.innerHTML = regions.map(r => `<span class="chip ${regionSel.has(r)?"active":""}" data-r="${esc(r)}">${esc(r)}</span>`).join("");
-  rc.querySelectorAll(".chip").forEach(c => c.onclick = () => { regionSel.has(c.dataset.r) ? regionSel.delete(c.dataset.r) : regionSel.add(c.dataset.r); render(); });
+  rc.querySelectorAll(".chip").forEach(c => c.onclick = () => { regionSel.has(c.dataset.r) ? regionSel.delete(c.dataset.r) : regionSel.add(c.dataset.r); renderEvents(); });
 }
 function matches(e){
+  if (e.venueType === "permanent") return false;
   if (tabOf(e) !== tab) return false;
   if (genreSel.size && !e.genres.some(g => genreSel.has(g))) return false;
   if (regionSel.size && !regionSel.has(e.region)) return false;
@@ -153,13 +273,12 @@ function matches(e){
   }
   return true;
 }
-function badge(e){
+function expBadge(e){
   const d = daysLeft(e);
   if (tab === "past" || d === null || d < 0) return "";
-  if (d === 0) return `<span class="badge soon">本日最終日</span>`;
-  if (d <= 14) return `<span class="badge soon">あと${d}日</span>`;
-  if (tab === "now") return `<span class="badge">あと${d}日</span>`;
-  return "";
+  if (d === 0) return `<span class="exp">賞味期限：${md(e.endDate)}（本日最終日）</span>`;
+  if (d <= 14) return `<span class="exp">賞味期限：${md(e.endDate)}（あと${d}日）</span>`;
+  return `<span class="exp far">賞味期限：${md(e.endDate)}</span>`;
 }
 function card(e){
   const img = e.imageUrl ? `<img src="${esc(e.imageUrl)}" alt="" loading="lazy" onerror="this.remove()">` : "";
@@ -167,9 +286,9 @@ function card(e){
     ? `<ul class="runs">${e.runs.map(r => `<li>${esc(r.venue||"")}（${period(r)}）</li>`).join("")}</ul>` : "";
   const detail = (e.description || e.datesNote || runs)
     ? `<details><summary>詳細</summary>${e.description?`<p>${esc(e.description)}</p>`:""}${e.datesNote?`<p>${esc(e.datesNote)}</p>`:""}${runs}</details>` : "";
-  return `<article class="card">${img}<div class="body">
+  return `<article class="card" data-eid="${e.id}">${img}<div class="body">
     <h2>${esc(e.title)}</h2>
-    ${badge(e)}
+    ${expBadge(e)}
     <div class="meta">${esc(e.venue||"")}<br>${period(e)}${e.prefecture?` ・ ${esc(e.prefecture)}`:""}</div>
     ${e.priceText?`<div class="price">${esc(e.priceText)}</div>`:""}
     <div class="genres">${(e.genres||[]).map(g=>`<span class="genre">${esc(g)}</span>`).join("")}</div>
@@ -180,6 +299,29 @@ function card(e){
     </div>
   </div></article>`;
 }
+function renderEvents(){
+  renderTabs(); renderChips();
+  const list = DATA.filter(matches);
+  list.sort((a,b) => (a.endDate||"9999").localeCompare(b.endDate||"9999"));
+  document.getElementById("grid").innerHTML = list.map(card).join("");
+  document.getElementById("empty").style.display = list.length ? "none" : "block";
+}
+document.getElementById("q").addEventListener("input", ev => { query = ev.target.value.trim(); renderEvents(); });
+document.getElementById("filterBtn").onclick = () => document.getElementById("filters").classList.toggle("open");
+function openEvent(id){
+  const e = DATA.find(x => x.id === id);
+  if (!e) return;
+  tab = tabOf(e); genreSel.clear(); regionSel.clear(); query = ""; document.getElementById("q").value = "";
+  showView("events"); renderEvents();
+  const el = document.querySelector(`[data-eid="${id}"]`);
+  if (el){
+    const det = el.querySelector("details"); if (det) det.open = true;
+    el.scrollIntoView({behavior:"smooth", block:"center"});
+    el.classList.add("hl"); setTimeout(() => el.classList.remove("hl"), 2600);
+  }
+}
+
+/* ===== stores ===== */
 function stripParens(s){
   let prev = "", cur = s || "";
   while (prev !== cur){ prev = cur; cur = cur.replace(/（[^（）]*）/g, ""); }
@@ -247,7 +389,6 @@ function isHouse(e, cardName, storeFull){
   if ((cardName === "探偵キャンプ" || cardName === "イマーシブジャーニー") && nospace(e.title).startsWith(nospace(cardName)) && !(e.title||"").includes("『") && !(e.title||"").includes("からの脱出")) return true;
   return false;
 }
-let CARDS = [];
 function buildCards(){
   const map = new Map();
   const add = (key, name, e, label, full) => {
@@ -302,6 +443,16 @@ function buildCards(){
   cards.sort((a,b) => (b.prods.length - a.prods.length) || a.name.localeCompare(b.name, "ja"));
   return cards;
 }
+function cardGroups(c){
+  const gs = new Set();
+  c.members.forEach(e => (e.genres||[]).forEach(g => gs.add(g)));
+  const out = [];
+  if (gs.has("マーダーミステリー")) out.push("マダミス");
+  if (gs.has("謎解き") || gs.has("脱出ゲーム")) out.push("謎解き・脱出");
+  if (gs.has("イマーシブ")) out.push("イマーシブ");
+  if (gs.has("展示")) out.push("展示");
+  return out;
+}
 function prodRow2(p, isBrand){
   const e = p.rep;
   const tags = (isBrand && p.tags.length) ? `<div class="tags">${p.tags.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div>` : "";
@@ -332,46 +483,96 @@ function storeCard2(c){
     c.house.length?`<p class="pm" style="font-weight:600;font-size:12.5px">常設コンテンツ</p><ul class="prods">${c.house.map(houseRow).join("")}</ul>`:"",
   ].join("");
   const total = c.prods.length + c.house.length;
+  const gt = cardGroups(c);
   return `<article class="card">${withImg?`<img src="${esc(withImg.imageUrl)}" alt="" loading="lazy" onerror="this.remove()">`:""}<div class="body">
     <h2>${esc(c.name)}</h2>
+    ${gt.length?`<div class="gtags">${gt.map(g=>`<span class="gtag">${g}</span>`).join("")}</div>`:""}
     <div class="meta">${esc(first.prefecture||"")}${first.region?` ・ ${esc(first.region)}`:""}<br>${counts}</div>
     ${preview?`<div class="preview">${preview}</div>`:""}
     <details><summary>公演一覧（${total}件）</summary>${sections}</details>
   </div></article>`;
 }
 function cardMatches(c){
-  if (regionSel.size && !c.members.some(e => regionSel.has(e.region))) return false;
-  if (genreSel.size && !c.members.some(e => (e.genres||[]).some(g => genreSel.has(g)))) return false;
-  if (query){
+  if (sGroup !== "すべて" && !cardGroups(c).includes(sGroup)) return false;
+  if (sRegionSel.size && !c.members.some(e => sRegionSel.has(e.region))) return false;
+  if (sQuery){
     const hay = c.name + " " + c.members.map(e => [e.title, e.venue, e.prefecture].join(" ")).join(" ") + " " + c.entries.map(x => x.label + " " + x.full).join(" ");
-    if (!hay.includes(query)) return false;
+    if (!hay.includes(sQuery)) return false;
   }
   return true;
 }
+function renderStoreChips(){
+  const gc = document.getElementById("sgChips");
+  gc.innerHTML = SGROUPS.map(g => `<span class="chip ${sGroup===g?"active":""}" data-g="${g}">${g}</span>`).join("");
+  gc.querySelectorAll(".chip").forEach(c => c.onclick = () => { sGroup = c.dataset.g; renderStores(); });
+  const regions = [...new Set(DATA.filter(e=>e.venueType==="permanent").map(e => e.region).filter(Boolean))].sort();
+  const rc = document.getElementById("srChips");
+  rc.innerHTML = regions.map(r => `<span class="chip ${sRegionSel.has(r)?"active":""}" data-r="${esc(r)}">${esc(r)}</span>`).join("");
+  rc.querySelectorAll(".chip").forEach(c => c.onclick = () => { sRegionSel.has(c.dataset.r) ? sRegionSel.delete(c.dataset.r) : sRegionSel.add(c.dataset.r); renderStores(); });
+}
 function renderStores(){
+  renderStoreChips();
   const list = CARDS.filter(cardMatches);
-  document.getElementById("grid").innerHTML = list.map(storeCard2).join("");
-  document.getElementById("empty").style.display = list.length ? "none" : "block";
+  document.getElementById("sgrid").innerHTML = list.map(storeCard2).join("");
+  document.getElementById("sempty").style.display = list.length ? "none" : "block";
 }
-function render(){
-  renderTabs(); renderChips();
-  if (tab === "store"){ renderStores(); return; }
-  const list = DATA.filter(matches);
-  list.sort((a,b) => (a.endDate||"9999").localeCompare(b.endDate||"9999"));
-  document.getElementById("grid").innerHTML = list.map(card).join("");
-  document.getElementById("empty").style.display = list.length ? "none" : "block";
+document.getElementById("sq").addEventListener("input", ev => { sQuery = ev.target.value.trim(); renderStores(); });
+
+/* ===== home ===== */
+function storeCount(){
+  return CARDS.reduce((n,c) => n + (c.isBrand ? new Set(c.entries.map(x => x.label)).size : 1), 0);
 }
-document.getElementById("q").addEventListener("input", ev => { query = ev.target.value.trim(); render(); });
-document.getElementById("filterBtn").onclick = () => document.getElementById("filters").classList.toggle("open");
+function renderHome(){
+  const evCount = DATA.filter(e => e.venueType !== "permanent").length;
+  document.getElementById("evCount").textContent = `消えもの ${evCount}件`;
+  document.getElementById("stCount").textContent = `常設 ${storeCount()}店`;
+  document.getElementById("sitesub").textContent = `賞味期限つきの体験型イベントまとめ｜収録 ${DATA.length} 件（${GENERATED} 時点のデータ）`;
+  const nowEnding = DATA.filter(e => e.venueType !== "permanent" && tabOf(e) === "now" && daysLeft(e) !== null && daysLeft(e) <= 14)
+    .sort((a,b) => daysLeft(a) - daysLeft(b));
+  const soonStart = DATA.filter(e => e.venueType !== "permanent" && tabOf(e) === "upcoming" && e.startDate && (new Date(e.startDate+"T00:00:00") - new Date(TODAY+"T00:00:00"))/86400000 <= 30)
+    .sort((a,b) => (a.startDate||"").localeCompare(b.startDate||""));
+  const picks = [...nowEnding, ...soonStart].slice(0, 10);
+  const chips = picks.map(e => {
+    const suffix = tabOf(e) === "now" ? ` 〜${md(e.endDate)}` : ` ${md(e.startDate)}〜`;
+    return `<button class="tchip" data-open="${e.id}">${esc(e.title)}${suffix}</button>`;
+  }).join("");
+  document.getElementById("ticker").innerHTML = chips + chips;
+  document.querySelectorAll("[data-open]").forEach(b => b.onclick = () => openEvent(parseInt(b.dataset.open, 10)));
+}
+
+/* ===== intro ===== */
+(function(){
+  const intro = document.getElementById("intro");
+  const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduced){ intro.style.display = "none"; return; }
+  let finished = false;
+  const timers = [];
+  const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+  function finish(){
+    if (finished) return; finished = true;
+    timers.forEach(clearTimeout);
+    intro.classList.add("done");
+    setTimeout(() => { intro.style.display = "none"; }, 500);
+  }
+  intro.addEventListener("click", finish);
+  later(() => intro.classList.add("reveal"), 700);
+  const num = document.getElementById("tnum");
+  const needle = document.getElementById("needle");
+  [3,2,1].forEach((n, i) => later(() => {
+    num.textContent = n;
+    needle.setAttribute("transform", `rotate(${(3-n)*40} 32 34)`);
+  }, 900 + i*950));
+  later(() => intro.classList.add("stamp"), 900 + 3*950);
+  later(finish, 900 + 3*950 + 650);
+})();
 
 fetch("events.json").then(r => r.json()).then(j => {
   DATA = j.events || [];
+  GENERATED = j.generatedAt || "";
   CARDS = buildCards();
-  document.getElementById("updated").textContent = `収録 ${DATA.length} 件（${j.generatedAt} 時点のデータ）`;
-  render();
+  renderHome(); renderEvents(); renderStores();
 }).catch(() => {
-  document.getElementById("empty").style.display = "block";
-  document.getElementById("empty").textContent = "データを読み込めませんでした。";
+  document.getElementById("sitesub").textContent = "データを読み込めませんでした。";
 });
 </script>
 </body>
