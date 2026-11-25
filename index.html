@@ -343,7 +343,17 @@ function chainHits(e){
   for (const v of list){
     const s = stripParens(v);
     let hit = null, m;
-    if (s.includes("ヒラメカ"))
+    if (s.includes("リドラの謎解きスタジオ"))
+      hit = {key:"store:リドラの謎解きスタジオ", name:"リドラの謎解きスタジオ", label:"リドラの謎解きスタジオ", full:"リドラの謎解きスタジオ"};
+    else if (s.includes("NANICA") && s.includes("下北沢"))
+      hit = {key:"store:NANICA 下北沢店", name:"NANICA 下北沢店", label:"NANICA 下北沢店", full:"NANICA 下北沢店"};
+    else if (s.includes("NANICA-NAGOYA") || s.includes("NANICA 名古屋"))
+      hit = {key:"store:NANICA-NAGOYA-", name:"NANICA-NAGOYA-", label:"NANICA-NAGOYA-", full:"NANICA-NAGOYA-"};
+    else if (s.includes("魔王の日曜日"))
+      hit = {key:"store:"+s, name:s, label:s, full:s};
+    else if (s.includes("ダークエスケープ"))
+      hit = {key:"store:"+s, name:s, label:s, full:s};
+    else if (s.includes("ヒラメカ"))
       hit = {key:"store:タンブルウィード ヒラメカ下北沢", name:"タンブルウィード ヒラメカ下北沢", label:"ヒラメカ下北沢", full:"タンブルウィード ヒラメカ下北沢"};
     else if (s.includes("ナゾベース"))
       hit = {key:"store:タンブルウィードナゾベース下北沢", name:"タンブルウィードナゾベース下北沢", label:"ナゾベース下北沢", full:"タンブルウィードナゾベース下北沢"};
