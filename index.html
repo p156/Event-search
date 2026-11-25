@@ -343,7 +343,16 @@ function chainHits(e){
   for (const v of list){
     const s = stripParens(v);
     let hit = null, m;
-    if (s.includes("東京ミステリーサーカス") || s.includes("TOKYO MYSTERY CIRCUS"))
+    if (s.includes("ヒラメカ"))
+      hit = {key:"store:タンブルウィード ヒラメカ下北沢", name:"タンブルウィード ヒラメカ下北沢", label:"ヒラメカ下北沢", full:"タンブルウィード ヒラメカ下北沢"};
+    else if (s.includes("ナゾベース"))
+      hit = {key:"store:タンブルウィードナゾベース下北沢", name:"タンブルウィードナゾベース下北沢", label:"ナゾベース下北沢", full:"タンブルウィードナゾベース下北沢"};
+    else if (s.includes("ゼオクシー") || s.includes("XEOXY")){
+      const fm = s.match(/([0-9０-９]+)F/);
+      const fl = fm ? fm[1].replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0)-0xFEE0)) + "F" : "ゼオクシー";
+      hit = {key:"brand:ゼオクシー", name:"ゼオクシー", label:fl, full:"ゼオクシー"+fl};
+    }
+    else if (s.includes("東京ミステリーサーカス") || s.includes("TOKYO MYSTERY CIRCUS"))
       hit = {key:"store:東京ミステリーサーカス", name:"東京ミステリーサーカス", label:"東京ミステリーサーカス", full:"東京ミステリーサーカス"};
     else if ((m = s.match(/^リアル脱出ゲーム[\s　]*(.+?)店/)))
       hit = {key:"brand:リアル脱出ゲーム", name:"リアル脱出ゲーム", label:m[1], full:"リアル脱出ゲーム"+m[1]+"店"};
